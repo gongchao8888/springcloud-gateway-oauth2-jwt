@@ -1,0 +1,54 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      cookie:
+        name: asdasda
+
+logging:
+  level:
+    root: debug
+#    org.springframework.web: INFO
+#    org.springframework.security: INFO
+#    org.springframework.security.oauth2: DEBUG
+#    org.springframework.cloud.gateway: DEBUG
+#    org.springframework.boot.autoconfigure: DEBUG
+
+spring:
+  thymeleaf:
+    cache: false
+  cloud: 
+    gateway:
+      x-forwarded: 
+        proto-enabled: false
+      discovery: 
+        locator:
+          enabled: true
+      routes:
+      - id: project
+        uri: http://localhost:9090/
+        predicates:
+        - Path=/project/** 
+
+  security: 
+    oauth2:
+      client:
+        registration:
+          website:
+            client-id: demo
+            client-secret: 12345
+            client-name: testClient
+            provider: website
+            scope: all
+#            redirect-uri: http://localhost:8080/login/oauth2/code/website
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+#            client-authentication-method: basic
+            authorization-grant-type: authorization_code
+        provider:
+          website:
+            authorization-uri: http://localhost:9093/uaa/oauth/authorize
+            token-uri: http://localhost:9093/uaa/oauth/token
+            user-info-uri: http://localhost:9093/uaa/me
+            jwk-set-uri: http://localhost:9093/uaa/oauth/token_key
+            user-name-attribute: name
+            
